@@ -8,6 +8,12 @@ public class TestGame extends TestCase {
         super(name);
     }
 
+    private Game g;
+
+    public void setUp(){
+        g = new Game();
+    }
+
     public void testOneThrow(){ // 하나의 투구
         Game g = new Game(); // 객체 생성
         g.add(5); // 첫번째 투구
@@ -31,6 +37,13 @@ public class TestGame extends TestCase {
         assertEquals(18,g.score()); // 전체 점수 테스트
         assertEquals(9, g.scoreForFrame(1)); // 프레임별 점수 테스트
         assertEquals(18, g.scoreForFrame(2)); // 프레임별 점수 테스트
+    }
+
+    public void testSimpleSpare(){ // 스페어를 처리하는 3개의 투구
+        g.add(3); // 첫번째 투구
+        g.add(7); // 두번째 투구
+        g.add(3); // 세번째 투구
+        assertEquals(13, g.scoreForFrame(1)); // 프레임별 점수 테스트(스페어)
     }
 
 }

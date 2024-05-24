@@ -20,10 +20,16 @@ public class Game { // 게임을 나타내는 객체, Frame을 연결 리스트�
             // 잠재적인 순서 의존성 제거
             int firstThrow = itsThrows[ball++];
             int secondThrow = itsThrows[ball++];
-            score += firstThrow + secondThrow;
+
+            int frameScore = firstThrow + secondThrow; // 해당 프레임의 투구 점수
+            // 스페어는 다음 프레임의 첫번째 투구에 필요하다.
+            if(frameScore == 10)
+                score += frameScore + itsThrows[ball];
+            else
+                score += frameScore;
         }
 
-        return score;
+        return score; // 해당 프레임 점수
     }
 
 
