@@ -32,34 +32,49 @@ public class Game { // 게임을 나타내는 객체, Frame을 연결 리스트�
 
         // currentFrame: 현재 프래임, theFrame: 알고 싶은 프레임
         for(int currentFrame = 0; currentFrame < theFrame; currentFrame++){
-            // 잠재적인 순서 의존성 제거
-            firstThrow = itsThrows[ball++];
-            if(firstThrow == 10){ // 스트라이크
-                score += 10 + itsThrows[ball] + itsThrows[ball + 1];
-            }else{ // 스트라이크 아니라면
-                score += handleSecondThrow();
+            if(strike()){ // 스트라이크
+                score += 10 + nextTwoBallsForStrike();
+                ball++;
+            }else if (spare()){
+                score += 10 + nextBallForSpare();
+                ball += 2;
+            }
+            else{ // 스트라이크 아니라면
+                score += twoBallsInFrame();
+                ball += 2;
             }
         }
 
         return score; // 해당 프레임 점수
     }
-    private int handleSecondThrow(){
-        int score = 0;
 
-        secondThrow = itsThrows[ball++];
+    private boolean strike(){
+        return itsThrows[ball]==10;
+    }
+    private int nextTwoBalls(){
+        return itsThrows[ball] + itsThrows[ball + 1];
+    }
+    private boolean spare(){
+        return (itsThrows[ball] + itsThrows[ball + 1]) == 10;
+    }
+    private int nextBall(){
+        return itsThrows[ball];
+    }
 
-        int frameScore = firstThrow + secondThrow; // 해당 프레임의 투구 점수
-        // 스페어는 다음 프레임의 첫번째 투구에 필요하다.
-        if(frameScore == 10)
-            score += frameScore + itsThrows[ball];
-        else
-            score += frameScore;
-
-        return score;
+    private int twoBallsInFrame(){
+        return itsThrows[ball] + itsThrows[ball + 1];
     }
 
     public int getCurrentFrame(){
         return itsCurrentFrame;
+    }
+
+    private int nextTwoBallsForStrike(){
+        return itsThrows[ball+1] + itsThrows[ball + 2];
+    }
+
+    private int nextBallForSpare(){
+        return itsThrows[ball+2];
     }
 
 
