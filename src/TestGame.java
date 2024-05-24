@@ -46,4 +46,13 @@ public class TestGame extends TestCase {
         assertEquals(13, g.scoreForFrame(1)); // 프레임별 점수 테스트(스페어)
     }
 
+    public void testSimpleFrameAfterSpare(){ // 스코어 함수 테스트 TODO: 실패
+        g.add(3);
+        g.add(7);
+        g.add(3);
+        g.add(2);
+        assertEquals(13, g.scoreForFrame(1));
+        assertEquals(18, g.score());
+    }
+
 }
