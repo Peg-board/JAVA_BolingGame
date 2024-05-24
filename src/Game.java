@@ -9,17 +9,21 @@ public class Game { // 게임을 나타내는 객체, Frame을 연결 리스트�
     public void add(int pins){ // 인자: 쓰러뜨린 핀의 개수
         itsThrows[itsCurrentThrow++] = pins; // 투구별 쓰러뜨린 핀의 개수
         itScore += pins; // 전체 점수 누계
-        adjustCurrentFrame();
+        adjustCurrentFrame(pins);
 
     }
 
-    private void adjustCurrentFrame(){
+    private void adjustCurrentFrame(int pins){
         if(firstThrow == true){ // 첫번째 투구라면
-            firstThrow = false; // 다음 투구는 첫번째가 아니고 두번째 투구이다.
+            if(pins == 10) // 스트라이크
+                itsCurrentFrame++; // 다음 프레임
+            else
+                firstThrow = false; // 스트라이크가 아니라면 다음 투구는 첫번째가 아니고 두번째 투구이다.
         }else{
             firstThrow = true; // 두번째 투구 다음은 새로운 프레임에 첫번째 투구이다.
             itsCurrentFrame++; // 다음 프레임
         }
+        itsCurrentFrame = Math.min(11, itsCurrentFrame); // 최대 프레임 제한, 11: score 함수는 getCurrentFrame에서 1을 뺸다.
     }
 
     public int scoreForFrame(int theFrame){ // 프레임별 점수를 계산하여 반환하는 함수
@@ -30,14 +34,18 @@ public class Game { // 게임을 나타내는 객체, Frame을 연결 리스트�
         for(int currentFrame = 0; currentFrame < theFrame; currentFrame++){
             // 잠재적인 순서 의존성 제거
             int firstThrow = itsThrows[ball++];
-            int secondThrow = itsThrows[ball++];
+            if(firstThrow == 10){ // 스트라이크
+                score += 10 + itsThrows[ball] + itsThrows[ball + 1];
+            }else{ // 스트라이크 아니라면
+                int secondThrow = itsThrows[ball++];
 
-            int frameScore = firstThrow + secondThrow; // 해당 프레임의 투구 점수
-            // 스페어는 다음 프레임의 첫번째 투구에 필요하다.
-            if(frameScore == 10)
-                score += frameScore + itsThrows[ball];
-            else
-                score += frameScore;
+                int frameScore = firstThrow + secondThrow; // 해당 프레임의 투구 점수
+                // 스페어는 다음 프레임의 첫번째 투구에 필요하다.
+                if(frameScore == 10)
+                    score += frameScore + itsThrows[ball];
+                else
+                    score += frameScore;
+            }
         }
 
         return score; // 해당 프레임 점수

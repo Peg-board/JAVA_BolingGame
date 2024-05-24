@@ -70,4 +70,59 @@ public class TestGame extends TestCase {
         assertEquals(3, g.getCurrentFrame()); // 현재 프레임 번호 테스트
     }
 
+    public void testPerfectGame(){ // 퍼팩트 게임일 경우 함수 테스트
+        // 퍼팩트 게임일 경우
+        for(int i=0; i < 12; i++)
+            g.add(10);
+
+        assertEquals(300, g.score()); // 전체 점수 테스트
+        assertEquals(11, g.getCurrentFrame()); // 11: score 함수는 getCurrentFrame에서 1을 뺸다.
+    }
+
+    public void testEndOfArray(){
+        for(int i=0; i < 9; i++)
+        {
+            g.add(0);
+            g.add(0);
+        }
+        g.add(2);
+        g.add(8); // 10번째 프레임의 스페어
+        g.add(10); // 배열 마지막 위치에서의 스트라이크
+        assertEquals(20, g.score()); // score()는 10까지 호출되기에 마지막 스트라이크는 실제로 스트라이크로 계산되지 않음
+    }
+
+    public void testSampleGame(){
+        g.add(1);
+        g.add(4);
+        g.add(4);
+        g.add(5);
+        g.add(6);
+        g.add(4);
+        g.add(5);
+        g.add(5);
+        g.add(10);
+        g.add(0);
+        g.add(1);
+        g.add(7);
+        g.add(3);
+        g.add(6);
+        g.add(4);
+        g.add(10);
+        g.add(2);
+        g.add(8);
+        g.add(6);
+        assertEquals(133, g.score());
+    }
+
+    public void testHeartBreak(){
+        for(int i = 0; i < 11; i++)
+            g.add(10);
+
+        g.add(9);
+        assertEquals(299, g.score());
+    }
+
+
+
+
 }
