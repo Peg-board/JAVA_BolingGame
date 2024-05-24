@@ -10,7 +10,8 @@ public class TestFrame extends TestCase {
 
     public void testScoreNoThrows(){
         Frame f = new Frame(); // 객체생성
-        assertEquals(0, f.getScore()); // 값이 반환되는지 확인
+        f.add(5);
+        assertEquals(5, f.getScore()); // 값이 반환되는지 확인
     }
 
 }
