@@ -6,9 +6,13 @@ public class Game { // 게임을 나타내는 객체, Frame을 연결 리스트�
         return scoreForFrame(getCurrentFrame()-1);
     }
 
+    public int getCurrentFrame(){
+        return itsCurrentFrame;
+    }
+
     public void add(int pins){ // 인자: 쓰러뜨린 핀의 개수
-        itsThrows[itsCurrentThrow++] = pins; // 투구별 쓰러뜨린 핀의 개수
-        itScore += pins; // 전체 점수 누계
+        itsScorer.addThrow(pins);
+        /**itScore += pins; // 전체 점수 누계*/
         adjustCurrentFrame(pins);
 
     }
@@ -27,64 +31,11 @@ public class Game { // 게임을 나타내는 객체, Frame을 연결 리스트�
     }
 
     public int scoreForFrame(int theFrame){ // 프레임별 점수를 계산하여 반환하는 함수
-        ball = 0;
-        int score = 0; // 해당 프레임의 점수
-
-        // currentFrame: 현재 프래임, theFrame: 알고 싶은 프레임
-        for(int currentFrame = 0; currentFrame < theFrame; currentFrame++){
-            if(strike()){ // 스트라이크
-                score += 10 + nextTwoBallsForStrike();
-                ball++;
-            }else if (spare()){
-                score += 10 + nextBallForSpare();
-                ball += 2;
-            }
-            else{ // 스트라이크 아니라면
-                score += twoBallsInFrame();
-                ball += 2;
-            }
-        }
-
-        return score; // 해당 프레임 점수
+        return itsScorer.scoreForFrame(theFrame);
     }
 
-    private boolean strike(){
-        return itsThrows[ball]==10;
-    }
-    private int nextTwoBalls(){
-        return itsThrows[ball] + itsThrows[ball + 1];
-    }
-    private boolean spare(){
-        return (itsThrows[ball] + itsThrows[ball + 1]) == 10;
-    }
-    private int nextBall(){
-        return itsThrows[ball];
-    }
-
-    private int twoBallsInFrame(){
-        return itsThrows[ball] + itsThrows[ball + 1];
-    }
-
-    public int getCurrentFrame(){
-        return itsCurrentFrame;
-    }
-
-    private int nextTwoBallsForStrike(){
-        return itsThrows[ball+1] + itsThrows[ball + 2];
-    }
-
-    private int nextBallForSpare(){
-        return itsThrows[ball+2];
-    }
-
-
-    private int ball;
-    private int firstThrow;
-    private int secondThrow;
-
-    private int itScore = 0; // 전체 점수
-    private int[] itsThrows = new int[21]; // 경기당 최대 투구 횟수
-    private int itsCurrentThrow = 0; // 현재 투구 횟수
-    private int itsCurrentFrame = 1; // 현재 프레임 번호
-    private boolean firstThrowInFrame = true; // 첫번째 투구 여부
+    /**private int itsScore = 0;*/
+    private int itsCurrentFrame = 1;
+    private boolean firstThrowInFrame = true;
+    private Scorer itsScorer = new Scorer();
 }
