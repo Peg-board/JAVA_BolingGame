@@ -3,12 +3,13 @@
  */
 public class Game { // 게임을 나타내는 객체, Frame을 연결 리스트로 갖기위해 생성
     public int score(){ // 전체 점수를 반환하는 함수
-        return scoreForFrame(getCurrentFrame()-1);
+        return scoreForFrame(itsCurrentFrame);
     }
 
     public int getCurrentFrame(){
         return itsCurrentFrame;
     }
+
 
     public void add(int pins){ // 인자: 쓰러뜨린 핀의 개수
         itsScorer.addThrow(pins);
@@ -18,16 +19,33 @@ public class Game { // 게임을 나타내는 객체, Frame을 연결 리스트�
     }
 
     private void adjustCurrentFrame(int pins){
-        if(firstThrowInFrame == true){ // 첫번째 투구라면
-            if(pins == 10) // 스트라이크
-                itsCurrentFrame++; // 다음 프레임
-            else
-                firstThrowInFrame = false; // 스트라이크가 아니라면 다음 투구는 첫번째가 아니고 두번째 투구이다.
-        }else{
-            firstThrowInFrame = true; // 두번째 투구 다음은 새로운 프레임에 첫번째 투구이다.
-            itsCurrentFrame++; // 다음 프레임
+        // 스트라이크 || 두번째 투구 -> 다음 프레임, 첫번째 투구
+        if(lastBallInFrame(pins)){
+            advanceFrame();
+            firstThrowInFrame = true;
         }
-        itsCurrentFrame = Math.min(11, itsCurrentFrame); // 최대 프레임 제한, 11: score 함수는 getCurrentFrame에서 1을 뺸다.
+        // 첫번째 투구(노 스트라이크) -> 두번째 투구
+        else
+            firstThrowInFrame = false;
+    }
+    private boolean strike(int pins){
+        return (firstThrowInFrame && pins == 10);
+    }
+    private boolean lastBallInFrame(int pins){
+        return strike(pins) || !firstThrowInFrame;
+    }
+
+
+    private boolean adjustFrameForStrike(int pins){
+        if(pins == 10){
+            advanceFrame();
+            return true;
+        }
+        return false;
+    }
+
+    private void advanceFrame(){
+        itsCurrentFrame = Math.min(10, itsCurrentFrame+1); // 최대 프레임 제한, 11: score 함수는 getCurrentFrame에서 1을 뺸다.
     }
 
     public int scoreForFrame(int theFrame){ // 프레임별 점수를 계산하여 반환하는 함수
@@ -38,4 +56,5 @@ public class Game { // 게임을 나타내는 객체, Frame을 연결 리스트�
     private int itsCurrentFrame = 1;
     private boolean firstThrowInFrame = true;
     private Scorer itsScorer = new Scorer();
+
 }

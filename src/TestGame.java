@@ -76,7 +76,7 @@ public class TestGame extends TestCase {
             g.add(10);
 
         assertEquals(300, g.score()); // 전체 점수 테스트
-        assertEquals(11, g.getCurrentFrame()); // 11: score 함수는 getCurrentFrame에서 1을 뺸다.
+        assertEquals(10, g.getCurrentFrame());
     }
 
     public void testEndOfArray(){
